@@ -1,32 +1,58 @@
-# blackroad-banking-platform
+# BlackRoad Banking Platform
 
-[![GitHub](https://img.shields.io/badge/GitHub-BlackRoad-OS-purple?style=for-the-badge&logo=github)](https://github.com/BlackRoad-OS/blackroad-banking-platform)
-[![Status](https://img.shields.io/badge/Status-Active-success?style=for-the-badge)](https://github.com/BlackRoad-OS/blackroad-banking-platform)
-[![BlackRoad](https://img.shields.io/badge/BlackRoad-OS-black?style=for-the-badge)](https://blackroad.io)
+> Banking core: accounts, transfers, statements, interest — ACID transactions with SQLite and decimal precision.
 
-# 🖤🛣️ BlackRoad Banking Platform
+Part of the [BlackRoad OS](https://github.com/BlackRoad-OS) platform.
 
-Part of the BlackRoad Product Empire - 350+ enterprise solutions
+## Features
 
-## 🚀 Quick Start
+- **Account management**: `open_account()`, `freeze_account()`, `close_account()`
+- **ACID transfers**: Atomic double-entry with deadlock-safe ordering
+- **Decimal precision**: `Decimal` throughout — zero floating-point errors
+- **Statements**: 30-day transaction history with CSV export
+- **Interest**: Apply compounding interest to savings/money-market accounts
+- **Account types**: Checking, Savings, Money Market, Credit
+
+## Installation
 
 ```bash
-./blackroad-banking-platform.sh
+pip install -r requirements.txt
 ```
 
-## 🎨 BlackRoad Design System
+## Usage
 
-- **Hot Pink**: #FF1D6C
-- **Amber**: #F5A623  
-- **Electric Blue**: #2979FF
-- **Violet**: #9C27B0
+```bash
+# Open account
+python src/banking_platform.py open "Alice" 1000.00 --type savings --rate 0.045
 
-## 📚 Documentation
+# Check balance
+python src/banking_platform.py balance <account-id>
 
-Full docs: https://docs.blackroad.io
+# Transfer
+python src/banking_platform.py transfer <from-id> <to-id> 250.00
 
-## 🖤 BlackRoad Empire
+# Statement
+python src/banking_platform.py statement <account-id> --days 30
 
-Part of 350+ products across 46 categories. Built with ∞ vision.
+# Apply interest
+python src/banking_platform.py interest <account-id>
 
-**BlackRoad OS, Inc.** | Built with Claude
+# Freeze account
+python src/banking_platform.py freeze <account-id>
+```
+
+## Testing
+
+```bash
+pytest tests/ -v --tb=short
+```
+
+## Architecture
+
+- `src/banking_platform.py` — 760+ lines: `Account`, `Transaction`, `BankingDB`, `BankingService`
+- `tests/test_banking.py` — 18 test functions covering ACID, precision, edge cases
+- SQLite with WAL mode, foreign keys, FULL synchronous for durability
+
+## License
+
+Proprietary — © BlackRoad OS, Inc. All rights reserved.
