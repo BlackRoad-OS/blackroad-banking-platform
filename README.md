@@ -1,58 +1,29 @@
-# BlackRoad Banking Platform
+# blackroad-banking-platform
 
-> Banking core: accounts, transfers, statements, interest — ACID transactions with SQLite and decimal precision.
-
-Part of the [BlackRoad OS](https://github.com/BlackRoad-OS) platform.
+Production-grade banking platform with accounts, transfers, interest, fraud detection, and audit trails.
 
 ## Features
-
-- **Account management**: `open_account()`, `freeze_account()`, `close_account()`
-- **ACID transfers**: Atomic double-entry with deadlock-safe ordering
-- **Decimal precision**: `Decimal` throughout — zero floating-point errors
-- **Statements**: 30-day transaction history with CSV export
-- **Interest**: Apply compounding interest to savings/money-market accounts
-- **Account types**: Checking, Savings, Money Market, Credit
-
-## Installation
-
-```bash
-pip install -r requirements.txt
-```
+- Checking, savings, and investment accounts with IBAN/routing generation
+- Transfers with configurable fee rates
+- Daily interest calculation and crediting
+- Account freeze/unfreeze controls
+- Anomaly detection via statistical z-score analysis (flags transactions > 3σ from mean)
+- Full audit log for all account actions
+- SQLite persistence with WAL mode
 
 ## Usage
-
 ```bash
-# Open account
-python src/banking_platform.py open "Alice" 1000.00 --type savings --rate 0.045
-
-# Check balance
-python src/banking_platform.py balance <account-id>
-
-# Transfer
-python src/banking_platform.py transfer <from-id> <to-id> 250.00
-
-# Statement
-python src/banking_platform.py statement <account-id> --days 30
-
-# Apply interest
-python src/banking_platform.py interest <account-id>
-
-# Freeze account
-python src/banking_platform.py freeze <account-id>
+python banking.py init
+python banking.py open-account Alice checking --deposit 1000
+python banking.py transfer <from_id> <to_id> 200 --memo "Rent"
+python banking.py statement <account_id> --start 2025-01-01
+python banking.py anomaly <account_id>
+python banking.py freeze <account_id>
+python banking.py interest <account_id>
 ```
 
 ## Testing
-
 ```bash
-pytest tests/ -v --tb=short
+pip install pytest
+pytest test_banking.py -v
 ```
-
-## Architecture
-
-- `src/banking_platform.py` — 760+ lines: `Account`, `Transaction`, `BankingDB`, `BankingService`
-- `tests/test_banking.py` — 18 test functions covering ACID, precision, edge cases
-- SQLite with WAL mode, foreign keys, FULL synchronous for durability
-
-## License
-
-Proprietary — © BlackRoad OS, Inc. All rights reserved.
